@@ -1,8 +1,10 @@
-package com.app.threetier.domain;
+package com.app.threetier.domain.vo;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@NoArgsConstructor
+@Getter @EqualsAndHashCode(of = "id")
+@Setter @ToString
 public class MemberVO {
     private Long id;
     private String memberEmail;

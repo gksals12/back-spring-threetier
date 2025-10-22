@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.threetier.mapper.PostMapper">
+    <insert id="insert" parameterType="PostVO">
+        INSERT INTO TBL_POST(ID, POST_TITLE, POST_CONTENT, MEMBER_ID)
+        VALUES(SEQ_POST.NEXTVAL, #{postTitle}, #{postContent}, #{memberId})
+    </insert>
+
+    <select id="selectAllPostOrderByDesc" resultType="PostDTO">
+        SELECT TBP.ID, TBP.POST_TITLE, TBP.POST_CONTENT, TBP.POST_READ_COUNT, TBM.ID AS MEMBER_ID, TBM.MEMBER_NAME, TBM.MEMBER_EMAIL
+        FROM TBL_POST TBP
+        JOIN TBL_MEMBER TBM
+        ON TBP.MEMBER_ID = TBM.ID
+        ORDER BY TBP.ID DESC
+    </select>
+
+    <select id="selectPostByPostId" parameterType="Long" resultType="PostDTO">
+        SELECT TBP.ID, TBP.POST_TITLE, TBP.POST_CONTENT, TBP.POST_READ_COUNT, TBM.ID AS MEMBER_ID, TBM.MEMBER_NAME, TBM.MEMBER_EMAIL
+        FROM TBL_POST TBP
+        JOIN TBL_MEMBER TBM
+        ON TBP.MEMBER_ID = TBM.ID
+        WHERE TBP.ID = #{id}
+    </select>
+
+    <update id="update" parameterType="PostVO">
+        UPDATE TBL_POST
+        SET POST_TITLE = #{postTitle}, POST_CONTENT = #{postContent}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updatePostReadCount" parameterType="Long">
+        UPDATE TBL_POST
+        SET POST_READ_COUNT = POST_READ_COUNT + 1
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deletePostByPostId" parameterType="Long">
+        DELETE FROM TBL_POST
+        WHERE ID = #{id}
+    </delete>
+
+    <delete id="deletePostByMemberId" parameterType="Long">
+        DELETE FROM TBL_POST
+        WHERE MEMBER_ID = #{id}
+    </delete>
+</mapper>
