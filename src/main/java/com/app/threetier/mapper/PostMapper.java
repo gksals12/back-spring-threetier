@@ -10,7 +10,7 @@ import java.util.Optional;
 @Mapper
 public interface PostMapper {
     //  글 등록
-    public void insert(PostVO postVO);
+    public Long insert(PostVO postVO);
 
     //  글 전체 조회
     public List<PostDTO> selectAllPostOrderByDesc();

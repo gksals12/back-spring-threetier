@@ -16,8 +16,9 @@ public class PostDAO {
     final private PostMapper postMapper;
 
     //  글 등록
-    public void save(PostVO postVO) {
+    public Long save(PostVO postVO) {
         postMapper.insert(postVO);
+        return postVO.getId();
     }
 
     //  글 전체 조회

@@ -19,8 +19,9 @@ public class PostServiceImpl implements PostService {
     final private PostDAO postDAO;
 
     @Override
-    public void write(PostVO postVO) {
-        postDAO.save(postVO);
+    public Long write(PostVO postVO) {
+        Long postId = postDAO.save(postVO);
+        return postId;
     }
 
     @Override

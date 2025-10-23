@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostService {
     //  글등록
-    public void write(PostVO postVO);
+    public Long write(PostVO postVO);
 
     //  글 전체 조회
     public List<PostDTO> showPostList();

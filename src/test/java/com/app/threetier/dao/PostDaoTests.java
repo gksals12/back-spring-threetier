@@ -22,6 +22,8 @@ public class PostDaoTests {
         postVO.setPostContent("ContentTestDao123");
         postVO.setMemberId(2L);
         postDAO.save(postVO);
+        log.info("postId={}", postDAO.save(postVO));
+
     }
 
     @Test
