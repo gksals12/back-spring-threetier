@@ -3,6 +3,9 @@ package com.app.threetier.service;
 import com.app.threetier.domain.dto.MemberResponseDTO;
 import com.app.threetier.domain.vo.MemberVO;
 import com.app.threetier.exception.MemberException;
+import com.app.threetier.exception.MemberExistEmailException;
+import com.app.threetier.exception.MemberNotFoundException;
+import com.app.threetier.exception.MemberPasswordException;
 import com.app.threetier.repository.MemberDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +24,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean existMemberEmail(String memberEmail) {
+        if(!memberDAO.existMemberEmail(memberEmail)){
+            throw new MemberExistEmailException("이메일이 중복");
+        }
+
         return memberDAO.existMemberEmail(memberEmail);
     }
 
@@ -35,15 +42,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponseDTO login(MemberVO memberVO) {
         if(!memberDAO.existMemberEmail(memberVO.getMemberEmail())) {
-            throw new MemberException("이메일이 존재하지 않습니다.");
+            throw new MemberExistEmailException("이메일이 존재하지 않습니다.");
         }
 
         Long id = memberDAO.findMemberIdByMemberEmail(memberVO.getMemberEmail());
 
-        MemberVO foundMember = memberDAO.findMemberById(id).orElseThrow(() -> new MemberException("유저를 찾을 수 없습니다"));
+        MemberVO foundMember = memberDAO.findMemberById(id).orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다"));
 
         if(!passwordEncoder.matches(memberVO.getMemberPassword(), foundMember.getMemberPassword())){
-            throw new MemberException("비밀번호가 일치하지 않습니다");
+            throw new MemberPasswordException("비밀번호가 일치하지 않습니다");
         }
 
         MemberResponseDTO memberResponse = new MemberResponseDTO(foundMember);
@@ -55,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
         memberVO.setMemberPassword(passwordEncoder.encode(memberVO.getMemberPassword()));
         memberDAO.updateMember(memberVO);
 
-        MemberVO foundMember =  memberDAO.findMemberById(memberVO.getId()).orElseThrow(() -> new MemberException("유저를 찾을 수 없습니다"));
+        MemberVO foundMember =  memberDAO.findMemberById(memberVO.getId()).orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다"));
 
         return new MemberResponseDTO(foundMember);
     }
